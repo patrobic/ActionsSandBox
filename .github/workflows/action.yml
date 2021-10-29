@@ -45,12 +45,17 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
           
+      - uses: papeloto/action-zip@v1
+        with:
+          files: test.zip
+          dest: result.zip
+          
       - name: Upload Artifact
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./test.txt
+          asset_path: result.zip
           asset_name: artifact.zip
           asset_content_type: application/zip
