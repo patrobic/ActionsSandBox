@@ -47,7 +47,7 @@ jobs:
           
       - uses: papeloto/action-zip@v1
         with:
-          files: test.zip
+          files: test.txt
           dest: result.zip
           
       - name: Upload Artifact
