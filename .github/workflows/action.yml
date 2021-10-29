@@ -35,9 +35,7 @@ jobs:
           bump_each_commit: true
         
       - name: echo info
-        run: echo |
-          "Got version ${{ steps.generate_version.outputs.version }}"
-          "Got version_tag ${{ steps.generate_version.outputs.version_tag }}"
+        run: echo "Got version ${{ steps.generate_version.outputs.version }}"
         
       - name: Create Release
         uses: actions/create-release@v1
