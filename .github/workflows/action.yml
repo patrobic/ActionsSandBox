@@ -35,7 +35,7 @@ jobs:
           "Got version ${{ steps.generate_version.outputs.version }}"
           "Got version_tag ${{ steps.generate_version.outputs.version_tag }}"
         
-      - name: release
+      - name: Create Release
         uses: actions/create-release@v1
         id: create_release
         with:
@@ -46,7 +46,8 @@ jobs:
           body_path: CHANGELOG.md
         env:
           GITHUB_TOKEN: ${{ github.token }}
-      - name: upload artifact
+          
+      - name: Upload Artifact
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ github.token }}
