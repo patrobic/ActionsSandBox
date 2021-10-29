@@ -9,6 +9,10 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Generate Version
         uses: paulhatch/semantic-version@v4.0.2
         id: generate_version
