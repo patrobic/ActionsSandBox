@@ -10,8 +10,8 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Generate Version
-      - uses: paulhatch/semantic-version@v4.0.2
-      - id: generate_version
+        uses: paulhatch/semantic-version@v4.0.2
+        id: generate_version
         with:
           # The prefix to use to identify tags
           tag_prefix: "v"
