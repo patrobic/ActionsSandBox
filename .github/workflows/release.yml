@@ -35,7 +35,7 @@ jobs:
           bump_each_commit: false
 
       - name: Generate Changelog
-        uses: mikepenz/release-changelog-builder-action@
+        uses: mikepenz/release-changelog-builder-action@v2.6.0
         id: generate_changelog
         with:
          commitMode: true
