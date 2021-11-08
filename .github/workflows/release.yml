@@ -45,11 +45,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               
       - name: Zip Artifact
-        run: Compress-Archive -Path Publish/* -DestinationPath artifact.zip
+        run: Compress-Archive -Path Publish/* -DestinationPath ${{ github.event.repository.name }}-${{ steps.generate_version.outputs.version_tag }}.zip
           
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          files: artifact.zip
+          files: ${{ github.event.repository.name }}-${{ steps.generate_version.outputs.version_tag }}.zip
           tag_name: ${{ steps.generate_version.outputs.version_tag }}
-          name: "${{ github.repository }}-${{ steps.generate_version.outputs.version_tag }}"
+          name: "${{ github.event.repository.name }}-${{ steps.generate_version.outputs.version_tag }}"
