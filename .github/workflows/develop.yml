@@ -1,6 +1,8 @@
 name: Build pull requests to main/develop
 
 on:
+  push:
+    branches: [ develop ]
   pull_request:
     branches: [ main, develop ]
 
@@ -26,14 +28,14 @@ jobs:
     - name: Build Solution
       run: dotnet build -c Release --no-restore
 
-    - name: Publish Solution
-      run: dotnet publish ActionsSandbox/ActionsSandbox.csproj -c Release -r win-x64 -p:PublishSingleFile=false --sc false -o Publish
-
     - name: Execute Tests
       run: dotnet test --no-restore --verbosity normal
+
+    - name: Publish Solution
+      run: dotnet publish ActionsSandbox/ActionsSandbox.csproj -c Release -r win-x64 -p:PublishSingleFile=false --sc false -o Publish
 
     - name: Generate Artifact
       uses: actions/upload-artifact@v2.2.1
       with:
-       name: artifact
+       name: 'artifact.zip'
        path: Publish/*
