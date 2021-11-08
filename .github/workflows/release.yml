@@ -34,7 +34,7 @@ jobs:
         id: generate_changelog
         with:
          commitMode: true
-         configuration: "changelog-config.json"
+         configuration: changelog-config.json
 
       - name: Publish Solution
         run: dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true --sc true -o Publish -p:Version=${{ steps.tag_version.outputs.new_version }}
