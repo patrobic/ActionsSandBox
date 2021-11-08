@@ -42,7 +42,7 @@ jobs:
         run: echo "Got version ${{ steps.generate_version.outputs.version }}"
         
       - name: Generate Changelog
-        uses: mikepenz/release-changelog-builder-action@2.6.0
+        uses: mikepenz/release-changelog-builder-action@v1
         id: generate_changelog
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -59,10 +59,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
           
-      - uses: papeloto/action-zip@v1
-        with:
-          files: Publish/*
-          dest: result.zip
+      - name: Zip Artifact
+        run: zip artifact.zip Publish/*
           
       - name: Upload Artifact
         uses: actions/upload-release-asset@v1
@@ -70,6 +68,6 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: result.zip
+          asset_path: artifact.zip
           asset_name: 'artifact-${{ steps.generate_version.outputs.version_tag }}.zip'
           asset_content_type: application/zip
