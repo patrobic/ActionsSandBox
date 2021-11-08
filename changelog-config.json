@@ -6,7 +6,7 @@
     }
   ],
   "template": "${{UNCATEGORIZED}}",
-  "pr_template": "- ${{TITLE}}",
+  "pr_template": "- ${{MERGE_SHA}} ${{TITLE}}",
   "empty_template": "${{OWNER}}\n${{REPO}}\n${{FROM_TAG}}\n${{TO_TAG}}",
   "max_pull_requests": 1000,
   "max_back_track_time_days": 1000
