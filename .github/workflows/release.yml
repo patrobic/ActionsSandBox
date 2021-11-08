@@ -33,7 +33,6 @@ jobs:
           format: "${major}.${minor}.${patch}"
           short_tags: true
           bump_each_commit: false
-          commitMode: true
 
       - name: Publish Solution
         run: dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true --sc true -o Publish -p:Version=${{ steps.generate_version.outputs.version }}
