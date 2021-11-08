@@ -41,7 +41,7 @@ jobs:
         run: dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true --sc true -o Publish -p:Version=${{ steps.tag_version.outputs.tag }}
 
       - name: Zip Artifact
-        run: Compress-Archive -Path Publish/* -DestinationPath ${{ github.event.repository.name }}-${{ steps.tag_version.outputs.tag }}.zip
+        run: zip Publish/* ${{ github.event.repository.name }}-${{ steps.tag_version.outputs.tag }}.zip
           
       - name: Create Release
         uses: softprops/action-gh-release@v1
