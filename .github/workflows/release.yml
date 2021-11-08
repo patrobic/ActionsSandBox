@@ -4,7 +4,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -25,10 +25,9 @@ jobs:
 
       - name: Generate Tag Version
         id: tag_version
-        uses: anothrNick/github-tag-action@1.36.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          WITH_V: true
+        uses: mathieudutour/github-tag-action@v5.6
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Generate Changelog
         uses: mikepenz/release-changelog-builder-action@v2.6.0
@@ -38,15 +37,15 @@ jobs:
          configuration: changelog-config.json
 
       - name: Publish Solution
-        run: dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true --sc true -o Publish -p:Version=${{ steps.tag_version.outputs.tag }}
+        run: dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true --sc true -o Publish -p:Version=${{ steps.tag_version.outputs.new_version }}
 
       - name: Zip Artifact
-        run: Compress-Archive -Path Publish/* -DestinationPath ${{ github.event.repository.name }}-${{ steps.tag_version.outputs.tag }}.zip
+        run: Compress-Archive -Path Publish/* -DestinationPath ${{ github.event.repository.name }}-${{ steps.tag_version.outputs.new_tag }}.zip
           
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          files: ${{ github.event.repository.name }}-${{ steps.tag_version.outputs.tag }}.zip
-          tag_name: ${{ steps.tag_version.outputs.tag }}
-          name: ${{ github.event.repository.name }}-${{ steps.tag_version.outputs.tag }}
+          files: ${{ github.event.repository.name }}-${{ steps.tag_version.outputs.new_tag }}.zip
+          tag_name: ${{ steps.tag_version.outputs.new_tag }}
+          name: ${{ github.event.repository.name }}-${{ steps.tag_version.outputs.new_tag }}
           body: ${{ steps.generate_changelog.outputs.changelog }}
