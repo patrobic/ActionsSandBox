@@ -51,4 +51,3 @@ jobs:
           tag_name: ${{ steps.generate_version.outputs.version_tag }}
           name: "${{ github.event.repository.name }}-${{ steps.generate_version.outputs.version_tag }}"
           body: ${{ steps.generate_changelog.outputs.changelog }}
-          commitMode: true
