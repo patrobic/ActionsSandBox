@@ -42,7 +42,7 @@ jobs:
         run: echo "Got version ${{ steps.generate_version.outputs.version }}"
         
       - name: Generate Changelog
-        uses: mikepenz/release-changelog-builder-action@master
+        uses: mikepenz/release-changelog-builder-action@2.6.0
         id: generate_changelog
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
