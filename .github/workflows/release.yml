@@ -24,9 +24,6 @@ jobs:
       - name: Install Dependencies
         run: dotnet restore
 
-      - name: Publish Solution
-        run: dotnet publish ActionsSandbox/ActionsSandbox.csproj -c Release -r win-x64 -p:PublishSingleFile=true --sc true -o Publish -p:Version=${{ steps.generate_version.outputs.version }}
-
       - name: Tag Version
         uses: paulhatch/semantic-version@v4.0.2
         id: generate_version
@@ -38,6 +35,9 @@ jobs:
           short_tags: true
           bump_each_commit: true
         
+      - name: Publish Solution
+        run: dotnet publish ActionsSandbox/ActionsSandbox.csproj -c Release -r win-x64 -p:PublishSingleFile=true --sc true -o Publish -p:Version=${{ steps.generate_version.outputs.version }}
+
       - name: echo info
         run: echo "Got version ${{ steps.generate_version.outputs.version }}"
         
