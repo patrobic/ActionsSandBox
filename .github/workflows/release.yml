@@ -42,11 +42,11 @@ jobs:
         run: echo "Got version ${{ steps.generate_version.outputs.version }}"
         
       - name: Generate Changelog
-        uses: Bullrich/generate-release-changelog@master
+        uses: mikepenz/release-changelog-builder-action@master
         id: generate_changelog
         env:
-          REPO: ${{ github.repository }}
-          
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
       - name: Create Release
         uses: actions/create-release@v1
         id: create_release
