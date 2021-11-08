@@ -36,7 +36,7 @@ jobs:
           bump_each_commit: true
         
       - name: Publish Solution
-        run: dotnet publish ActionsSandbox/ActionsSandbox.csproj -c Release -r win-x64 -p:PublishSingleFile=true --sc true -o Publish -p:Version=${{ steps.generate_version.outputs.version }}
+        run: dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true --sc true -o Publish -p:Version=${{ steps.generate_version.outputs.version }}
 
       - name: Generate Changelog
         uses: mikepenz/release-changelog-builder-action@v1
@@ -52,4 +52,4 @@ jobs:
         with:
           files: artifact.zip
           tag_name: ${{ steps.generate_version.outputs.version_tag }}
-          name: "ActionsSandbox-${{ steps.generate_version.outputs.version_tag }}"
+          name: "${{ github.repository }}-${{ steps.generate_version.outputs.version_tag }}"
