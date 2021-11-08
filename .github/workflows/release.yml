@@ -40,6 +40,7 @@ jobs:
         with:
          commitMode: true
          configuration: "changelog-config.json"
+         toTag: ${{ steps.generate_version.outputs.version_tag }}
 
       - name: Publish Solution
         run: dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true --sc true -o Publish -p:Version=${{ steps.generate_version.outputs.version }}
