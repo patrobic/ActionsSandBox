@@ -36,7 +36,7 @@ jobs:
          configuration: changelog-config.json
 
       - name: Publish Solution
-        run: dotnet publish -c Release -r win-x64 --sc true -o Publish -p:Version=${{ steps.tag_version.outputs.tag }}
+        run: dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true --sc true -o Publish -p:Version=${{ steps.tag_version.outputs.tag }}
 
       - name: Zip Artifact
         run: (cd Publish; zip -r ../${{ github.event.repository.name }}-v${{ steps.tag_version.outputs.tag }}.zip .)
