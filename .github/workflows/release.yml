@@ -40,7 +40,9 @@ jobs:
       - name: Generate Changelog
         uses: mikepenz/release-changelog-builder-action@v1
         id: generate_changelog
-              
+        with:
+         commitMode: true
+         
       - name: Zip Artifact
         run: Compress-Archive -Path Publish/* -DestinationPath ${{ github.event.repository.name }}-${{ steps.generate_version.outputs.version_tag }}.zip
           
