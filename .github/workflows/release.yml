@@ -39,6 +39,8 @@ jobs:
         id: generate_changelog
         with:
          commitMode: true
+         categories: '[{"title": "## Uncategorized","labels": []}]'
+         template: '${{CHANGELOG}}\n\nUncategorized:\n${{UNCATEGORIZED}}\n\nIgnored:\n${{IGNORED}}\n\n${{UNCATEGORIZED_COUNT}}\n${{IGNORED_COUNT}}"'
          
       - name: Publish Solution
         run: dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true --sc true -o Publish -p:Version=${{ steps.generate_version.outputs.version }}
