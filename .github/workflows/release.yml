@@ -38,9 +38,6 @@ jobs:
       - name: Publish Solution
         run: dotnet publish ActionsSandbox/ActionsSandbox.csproj -c Release -r win-x64 -p:PublishSingleFile=true --sc true -o Publish -p:Version=${{ steps.generate_version.outputs.version }}
 
-      - name: echo info
-        run: echo "Got version ${{ steps.generate_version.outputs.version }}"
-        
       - name: Generate Changelog
         uses: mikepenz/release-changelog-builder-action@v1
         id: generate_changelog
@@ -48,10 +45,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               
       - name: Zip Artifact
-        run: Compress-Archive -Path Publish -DestinationPath artifact.zip
+        run: Compress-Archive -Path Publish/* -DestinationPath artifact.zip
           
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           files: artifact.zip
           tag_name: ${{ steps.generate_version.outputs.version_tag }}
+          name: "ActionsSandbox-${{ steps.generate_version.outputs.version_tag }}"
