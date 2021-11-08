@@ -34,15 +34,15 @@ jobs:
           short_tags: true
           bump_each_commit: false
 
-      - name: Publish Solution
-        run: dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true --sc true -o Publish -p:Version=${{ steps.generate_version.outputs.version }}
-
       - name: Generate Changelog
         uses: mikepenz/release-changelog-builder-action@v1
         id: generate_changelog
         with:
          commitMode: true
          
+      - name: Publish Solution
+        run: dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true --sc true -o Publish -p:Version=${{ steps.generate_version.outputs.version }}
+
       - name: Zip Artifact
         run: Compress-Archive -Path Publish/* -DestinationPath ${{ github.event.repository.name }}-${{ steps.generate_version.outputs.version_tag }}.zip
           
