@@ -46,19 +46,7 @@ jobs:
         id: generate_changelog
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    
-      - name: Create Release
-        uses: actions/create-release@v1
-        id: create_release
-        with:
-          draft: false
-          prerelease: false
-          release_name: ${{ steps.generate_version.outputs.version }}
-          tag_name: ${{ steps.generate_version.outputs.version_tag }}
-          body: ${{ steps.generate_changelog.outputs.changelog }}
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-          
+              
       - name: Zip Artifact
         run: Compress-Archive -Path Publish -DestinationPath artifact.zip
           
@@ -66,4 +54,4 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: artifact.zip
-          
+          tag_name: ${{ steps.generate_version.outputs.version_tag }}
