@@ -1,19 +1,33 @@
 on: 
   push:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
-  release-on-push:
-    runs-on: ubuntu-latest
+  build:
+    runs-on: windows-latest
+
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     steps:
-      - name: Checkout
+      - name: Checkout Modules
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Generate Version
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
+          include-prerelease: true
+   
+      - name: Install Dependencies
+        run: dotnet restore
+
+      - name: Publish Solution
+        run: dotnet publish ActionsSandbox/ActionsSandbox.csproj -c Release -r win-x64 -p:PublishSingleFile=true --sc true -o Publish -p:Version=${{ steps.generate_version.outputs.version }}
+
+      - name: Tag Version
         uses: paulhatch/semantic-version@v4.0.2
         id: generate_version
         with:
@@ -47,7 +61,7 @@ jobs:
           
       - uses: papeloto/action-zip@v1
         with:
-          files: test.txt
+          files: Publish/*
           dest: result.zip
           
       - name: Upload Artifact
