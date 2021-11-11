@@ -1,3 +1,5 @@
+name: Create new release from main
+
 on: 
   push:
     branches: [ main ]
