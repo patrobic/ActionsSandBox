@@ -36,7 +36,7 @@ jobs:
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         verbose: true
-        #working-directory: ./
+        working-directory: /a/ActionsSandBox/
 
     - name: Publish Solution
       run: dotnet publish ActionsSandbox/ActionsSandbox.csproj -c Release -r win-x64 -p:PublishSingleFile=false --sc false -o Publish
