@@ -5,7 +5,29 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  test:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Modules
+        uses: actions/checkout@v2
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
+   
+      - name: Install Dependencies
+        run: dotnet restore
+
+      - name: Execute Tests
+        run: dotnet test --no-restore --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+    
+      - name: Upload Coverage
+        uses: codecov/codecov-action@v2.1.0
+
+  release:
+    name: Build & Release
     runs-on: ubuntu-latest
 
     env:
@@ -19,7 +41,6 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 6.0.x
-          include-prerelease: true
    
       - name: Install Dependencies
         run: dotnet restore
