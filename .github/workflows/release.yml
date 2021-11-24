@@ -55,9 +55,12 @@ jobs:
       - name: Generate Changelog
         uses: mikepenz/release-changelog-builder-action@v2.6.0
         id: generate_changelog
+        with:
+         commitMode: true
+         configuration: changelog-config.json
 
       - name: Publish Solution
-        run: dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true --sc true -o Publish -p:Version=${{ steps.tag_version.outputs.tag }}
+        run: dotnet publish ${{ github.event.repository.name }}/${{ github.event.repository.name }}.csproj -c Release -r win-x64 -p:PublishSingleFile=true --sc true -o Publish -p:Version=${{ steps.tag_version.outputs.tag }}
 
       - name: Zip Artifact
         run: (cd Publish; zip -r ../${{ github.event.repository.name }}-v${{ steps.tag_version.outputs.tag }}.zip .)
