@@ -1,26 +1,27 @@
-name: Build pull requests to main/develop
+name: Test & Publish Artifact on develop
 
 on:
   push:
     branches: [ develop ]
-  pull_request:
-    branches: [ main, develop ]
 
 jobs:
   build:
-    runs-on: windows-latest
+    name: Build, Test & Publish Artifact
+    runs-on: ubuntu-latest
+
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
     - name: Checkout Modules
       uses: actions/checkout@v2
       with: 
-        submodules: recursive
+        submodules: true
 
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.x
-        include-prerelease: true
 
     - name: Install Dependencies
       run: dotnet restore
@@ -29,16 +30,25 @@ jobs:
       run: dotnet build --no-restore /p:ContinuousIntegrationBuild=true
 
     - name: Execute Tests
-      run: dotnet test --no-restore --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+      run: dotnet test --no-restore /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+      continue-on-error: true
 
     - name: Upload Coverage
       uses: codecov/codecov-action@v2.1.0
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
 
     - name: Publish Solution
       run: dotnet publish ActionsSandbox/ActionsSandbox.csproj -c Release -r win-x64 -p:PublishSingleFile=false --sc false -o Publish
 
+    - name: Delete Old Artifacts
+      uses: c-hive/gha-remove-artifacts@v1.2.0
+      with:
+        age: '0 day'
+        skip-recent: 2
+
     - name: Generate Artifact
       uses: actions/upload-artifact@v2.2.1
       with:
-       name: 'artifact.zip'
+       name: 'ActionsSandbox.zip'
        path: Publish/*
