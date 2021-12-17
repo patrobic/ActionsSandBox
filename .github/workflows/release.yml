@@ -29,6 +29,12 @@ jobs:
         uses: WyriHaximus/github-action-get-previous-tag@v1
         id: tag_version
 
+      - name: Set Versions
+        uses: actions/github-script@v4
+        id: set_version
+        with:
+          script: core.setOutput('tag', {{ steps.tag_version.outputs.tag }}.replace('v', ''))
+
       - name: Generate Changelog
         uses: mikepenz/release-changelog-builder-action@v2.6.0
         id: generate_changelog
@@ -37,15 +43,14 @@ jobs:
           configuration: changelog-config.json
 
       - name: Publish Solution
-        run: dotnet publish ${{ github.event.repository.name }}/${{ github.event.repository.name }}.csproj -c Release -r win-x64 -p:PublishSingleFile=true --sc true -o Publish -p:Version=${{ steps.tag_version.outputs.tag }}
+        run: dotnet publish ${{ github.event.repository.name }}/${{ github.event.repository.name }}.csproj -c Release -r win-x64 -p:PublishSingleFile=true --sc true -o Publish -p:Version=${{ steps.set_version.outputs.tag }}
 
       - name: Zip Artifact
-        run: Compress-Archive -Path Publish/* -DestinationPath ${{ github.event.repository.name }}-v${{ steps.tag_version.outputs.new_tag }}.zip
+        run: Compress-Archive -Path Publish/* -DestinationPath ${{ github.event.repository.name }}-${{ steps.tag_version.outputs.tag }}.zip
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          files: ${{ github.event.repository.name }}-v${{ steps.tag_version.outputs.tag }}.zip
-          #tag_name: v${{ steps.tag_version.outputs.tag }}
-          name: ${{ github.event.repository.name }}-v${{ steps.tag_version.outputs.tag }}
+          files: ${{ github.event.repository.name }}-${{ steps.tag_version.outputs.tag }}.zip
+          name: ${{ github.event.repository.name }}-${{ steps.tag_version.outputs.tag }}
           body: ${{ steps.generate_changelog.outputs.changelog }}

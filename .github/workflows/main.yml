@@ -51,3 +51,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PUSH_TAGS }}
           DEFAULT_BUMP: patch
+          WITH_V: true
