@@ -1,8 +1,8 @@
 name: Create Release on New Tag
 
-on: 
+on:
   push:
-    branches: [ main ]
+    tags: [ "v*.*.*" ]
 
 jobs:
   release:
@@ -15,12 +15,20 @@ jobs:
     steps:
       - name: Checkout Modules
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
-   
+        with:
+          dotnet-version: 6.0.x
+ 
       - name: Install Dependencies
         run: dotnet restore
+
+      - name: Get Latest Tag
+        uses: WyriHaximus/github-action-get-previous-tag@v1
+        id: tag_version
 
       - name: Generate Changelog
         uses: mikepenz/release-changelog-builder-action@v2.6.0
@@ -32,13 +40,14 @@ jobs:
       - name: Publish Solution
         run: dotnet publish ${{ github.event.repository.name }}/${{ github.event.repository.name }}.csproj -c Release -r win-x64 -p:PublishSingleFile=true --sc true -o Publish -p:Version=${{ steps.tag_version.outputs.tag }}
 
+      #- name: Zip Artifact
+      #  run: (cd Publish; zip -r ../${{ github.event.repository.name }}-v${{ steps.tag_version.outputs.tag }}.zip .)
       - name: Zip Artifact
-        run: (cd Publish; zip -r ../${{ github.event.repository.name }}-v${{ steps.tag_version.outputs.tag }}.zip .)
+        run: Compress-Archive -Path Publish/* -DestinationPath ${{ github.event.repository.name }}-${{ steps.tag_version.outputs.new_tag }}.zip
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           files: ${{ github.event.repository.name }}-v${{ steps.tag_version.outputs.tag }}.zip
-          tag_name: v${{ steps.tag_version.outputs.tag }}
           name: ${{ github.event.repository.name }}-v${{ steps.tag_version.outputs.tag }}
           body: ${{ steps.generate_changelog.outputs.changelog }}
