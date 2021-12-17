@@ -2,7 +2,7 @@ name: Test & Publish Artifact on develop
 
 on:
   push:
-    branches: [ develop ]
+    branches: [develop]
 
 jobs:
   build:
@@ -10,43 +10,43 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout Modules
-      uses: actions/checkout@v2
-      with: 
-        submodules: true
+      - name: Checkout Modules
+        uses: actions/checkout@v2
+        with:
+          submodules: true
 
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 6.0.x
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
 
-    - name: Install Dependencies
-      run: dotnet restore
+      - name: Install Dependencies
+        run: dotnet restore
 
-    - name: Build Solution
-      run: dotnet build --no-restore /p:ContinuousIntegrationBuild=true
+      - name: Build Solution
+        run: dotnet build --no-restore /p:ContinuousIntegrationBuild=true
 
-    - name: Execute Tests
-      run: dotnet test --no-restore /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-      continue-on-error: true
+      - name: Execute Tests
+        run: dotnet test --no-restore /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+        continue-on-error: true
 
-    - name: Upload Coverage
-      uses: codecov/codecov-action@v2.1.0
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
+      - name: Upload Coverage
+        uses: codecov/codecov-action@v2.1.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
 
-    - name: Publish Solution
-      run: dotnet publish ActionsSandbox/ActionsSandbox.csproj -c Release -r win-x64 -p:PublishSingleFile=false --sc false -o Publish
+      - name: Publish Solution
+        run: dotnet publish ActionsSandbox/ActionsSandbox.csproj -c Release -r win-x64 -p:PublishSingleFile=false --sc false -o Publish
 
-    - name: Delete Old Artifacts
-      uses: c-hive/gha-remove-artifacts@v1.2.0
-      with:
-        age: '0 day'
-        skip-recent: 0
+      - name: Delete Old Artifacts
+        uses: c-hive/gha-remove-artifacts@v1.2.0
+        with:
+          age: "0 day"
+          skip-recent: 0
 
-    - name: Generate Artifact
-      uses: actions/upload-artifact@v2.2.1
-      with:
-       name: 'ActionsSandbox.zip'
-       path: Publish/*
-       continue-on-error: true
+      - name: Generate Artifact
+        uses: actions/upload-artifact@v2.2.1
+        with:
+          name: "ActionsSandbox.zip"
+          path: Publish/*
+          continue-on-error: true

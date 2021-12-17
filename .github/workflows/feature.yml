@@ -2,7 +2,7 @@ name: Test on feature branch
 
 on:
   push:
-    branches: [ feature/* ]
+    branches: [feature/*]
 
 jobs:
   build:
@@ -13,24 +13,24 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-    - name: Checkout Modules
-      uses: actions/checkout@v2
-      with:
-        submodules: true
-      
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 6.0.x
+      - name: Checkout Modules
+        uses: actions/checkout@v2
+        with:
+          submodules: true
 
-    - name: Install Dependencies
-      run: dotnet restore
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
 
-    - name: Execute Tests
-      run: dotnet test --no-restore /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-      continue-on-error: true
+      - name: Install Dependencies
+        run: dotnet restore
 
-    - name: Upload Coverage
-      uses: codecov/codecov-action@v2.1.0
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
+      - name: Execute Tests
+        run: dotnet test --no-restore /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+        continue-on-error: true
+
+      - name: Upload Coverage
+        uses: codecov/codecov-action@v2.1.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
