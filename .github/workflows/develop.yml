@@ -36,7 +36,9 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Publish Solution
-        run: dotnet publish ActionsSandbox/ActionsSandbox.csproj -c Release -r win-x64 -p:PublishSingleFile=false --sc false -o Publish
+        run: >
+          dotnet publish ${{ github.event.repository.name }}/${{ github.event.repository.name }}.csproj
+          -c Release -r win-x64 -p:PublishSingleFile=false --sc false -o Publish
 
       - name: Delete Old Artifacts
         uses: c-hive/gha-remove-artifacts@v1.2.0
@@ -47,6 +49,6 @@ jobs:
       - name: Generate Artifact
         uses: actions/upload-artifact@v2.2.1
         with:
-          name: "ActionsSandbox.zip"
+          name: "${{ github.event.repository.name }}.zip"
           path: Publish/*
           continue-on-error: true
