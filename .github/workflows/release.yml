@@ -32,9 +32,11 @@ jobs:
       - name: Set Versions
         uses: actions/github-script@v4
         id: set_version
+        env:
+          TAG: ${{ steps.tag_version.outputs.tag }}
         with:
           script: |
-            const tag = {{ steps.tag_version.outputs.tag }}
+            const tag = process.env.TAG
             const no_v = tag.replace('v', '')
             core.setOutput('tag', no_v)
 
