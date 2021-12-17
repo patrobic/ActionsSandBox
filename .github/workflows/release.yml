@@ -33,7 +33,10 @@ jobs:
         uses: actions/github-script@v4
         id: set_version
         with:
-          script: core.setOutput('tag', {{ steps.tag_version.outputs.tag }}.replace('v', ''))
+          script: |
+            const tag = {{ steps.tag_version.outputs.tag }}
+            const no_v = tag.replace('v', '')
+            core.setOutput('tag', no_v)
 
       - name: Generate Changelog
         uses: mikepenz/release-changelog-builder-action@v2.6.0
