@@ -1,4 +1,4 @@
-name: Create Release on New Tag
+name: Create Release on tag
 
 on:
   push:
@@ -44,7 +44,7 @@ jobs:
       - name: Publish Solution
         run: >
           dotnet publish ${{ github.event.repository.name }}/${{ github.event.repository.name }}.csproj
-           -c Release -r win-x64 -p:PublishSingleFile=true --sc true -o Publish -p:Version=${{ steps.latest_tag_no_v.outputs.tag_no_v }}
+            -c Release -r win-x64 -p:PublishSingleFile=true --sc true -o Publish -p:Version=${{ steps.latest_tag_no_v.outputs.tag_no_v }}
 
       - name: Zip Artifact
         run: Compress-Archive -Path Publish/* -DestinationPath ${{ github.event.repository.name }}-${{ steps.latest_tag.outputs.tag }}.zip

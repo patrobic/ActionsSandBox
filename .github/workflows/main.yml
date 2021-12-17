@@ -1,4 +1,4 @@
-name: Test & Create Tag on main
+name: Create Tag on main
 
 on:
   push:
