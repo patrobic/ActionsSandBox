@@ -40,11 +40,12 @@ jobs:
         run: dotnet publish ${{ github.event.repository.name }}/${{ github.event.repository.name }}.csproj -c Release -r win-x64 -p:PublishSingleFile=true --sc true -o Publish -p:Version=${{ steps.tag_version.outputs.tag }}
 
       - name: Zip Artifact
-        run: Compress-Archive -Path Publish/* -DestinationPath ${{ github.event.repository.name }}-${{ steps.tag_version.outputs.new_tag }}.zip
+        run: Compress-Archive -Path Publish/* -DestinationPath ${{ github.event.repository.name }}-v${{ steps.tag_version.outputs.new_tag }}.zip
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           files: ${{ github.event.repository.name }}-v${{ steps.tag_version.outputs.tag }}.zip
+          #tag_name: v${{ steps.tag_version.outputs.tag }}
           name: ${{ github.event.repository.name }}-v${{ steps.tag_version.outputs.tag }}
           body: ${{ steps.generate_changelog.outputs.changelog }}
