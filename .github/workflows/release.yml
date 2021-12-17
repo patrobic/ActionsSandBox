@@ -37,6 +37,7 @@ jobs:
       - name: Generate Changelog
         uses: mikepenz/release-changelog-builder-action@v2.6.0
         id: generate_changelog
+        continue-on-error: true
         with:
           commitMode: true
           configuration: changelog-config.json
