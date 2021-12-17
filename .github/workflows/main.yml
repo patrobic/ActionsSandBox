@@ -1,8 +1,8 @@
 name: Test & Create Tag on main
 
-on: 
+on:
   push:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   test:
@@ -22,13 +22,13 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 6.0.x
-   
+
       - name: Install Dependencies
         run: dotnet restore
 
       - name: Execute Tests
         run: dotnet test --no-restore --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-    
+
       - name: Upload Coverage
         uses: codecov/codecov-action@v2.1.0
         with:
@@ -43,6 +43,10 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: "0"
+
       - name: Generate Tag Version
         id: tag_version
         uses: anothrNick/github-tag-action@1.36.0
