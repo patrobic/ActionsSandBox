@@ -2,8 +2,7 @@ name: Create Release on New Tag
 
 on:
   push:
-    tags:
-      - "*"
+    tags: [v*]
 
 jobs:
   release:
@@ -27,13 +26,13 @@ jobs:
 
       - name: Get Latest Tag
         uses: WyriHaximus/github-action-get-previous-tag@v1
-        id: tag_version
+        id: latest_tag
 
-      - name: Set Versions
+      - name: Strip V From Tag
         uses: actions/github-script@v4
-        id: set_version
+        id: latest_tag_no_v
         with:
-          script: core.setOutput('tag', '${{ steps.tag_version.outputs.tag }}'.replace('v', ''))
+          script: core.setOutput('tag_no_v', ${{ steps.latest_tag.outputs.tag }}.replace('v', ''))
 
       - name: Generate Changelog
         uses: mikepenz/release-changelog-builder-action@v2.6.0
@@ -43,14 +42,16 @@ jobs:
           configuration: changelog-config.json
 
       - name: Publish Solution
-        run: dotnet publish ${{ github.event.repository.name }}/${{ github.event.repository.name }}.csproj -c Release -r win-x64 -p:PublishSingleFile=true --sc true -o Publish -p:Version=${{ steps.set_version.outputs.tag }}
+        run: >
+          dotnet publish ${{ github.event.repository.name }}/${{ github.event.repository.name }}.csproj
+           -c Release -r win-x64 -p:PublishSingleFile=true --sc true -o Publish -p:Version=${{ steps.latest_tag_no_v.outputs.tag_no_v }}
 
       - name: Zip Artifact
-        run: Compress-Archive -Path Publish/* -DestinationPath ${{ github.event.repository.name }}-${{ steps.tag_version.outputs.tag }}.zip
+        run: Compress-Archive -Path Publish/* -DestinationPath ${{ github.event.repository.name }}-${{ steps.latest_tag.outputs.tag }}.zip
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          files: ${{ github.event.repository.name }}-${{ steps.tag_version.outputs.tag }}.zip
-          name: ${{ github.event.repository.name }}-${{ steps.tag_version.outputs.tag }}
+          files: ${{ github.event.repository.name }}-${{ steps.latest_tag.outputs.tag }}.zip
+          name: ${{ github.event.repository.name }}-${{ steps.latest_tag.outputs.tag }}
           body: ${{ steps.generate_changelog.outputs.changelog }}
