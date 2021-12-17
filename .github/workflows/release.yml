@@ -1,4 +1,4 @@
-name: Test & Create Release on main
+name: Create Release on New Tag
 
 on: 
   push:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   release:
-    name: Build, Test & Create Release
+    name: Build & Create Release
     runs-on: windows-latest
 
     env:
@@ -15,31 +15,12 @@ jobs:
     steps:
       - name: Checkout Modules
         uses: actions/checkout@v2
-        with:
-          submodules: true
 
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 6.0.x
    
       - name: Install Dependencies
         run: dotnet restore
-
-      - name: Execute Tests
-        run: dotnet test --no-restore --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-    
-      - name: Upload Coverage
-        uses: codecov/codecov-action@v2.1.0
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-
-      - name: Generate Tag Version
-        id: tag_version
-        uses: anothrNick/github-tag-action@1.36.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DEFAULT_BUMP: patch
 
       - name: Generate Changelog
         uses: mikepenz/release-changelog-builder-action@v2.6.0
