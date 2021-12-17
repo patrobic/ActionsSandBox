@@ -1,4 +1,4 @@
-name: "main: Push New Tag"
+name: main - Push New Tag
 
 on:
   push:
