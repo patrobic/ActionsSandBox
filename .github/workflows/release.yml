@@ -32,7 +32,7 @@ jobs:
         uses: actions/github-script@v4
         id: latest_tag_no_v
         with:
-          script: core.setOutput('tag_no_v', ${{ steps.latest_tag.outputs.tag }}.replace('v', ''))
+          script: core.setOutput('tag_no_v', '${{ steps.latest_tag.outputs.tag }}'.replace('v', ''))
 
       - name: Generate Changelog
         uses: mikepenz/release-changelog-builder-action@v2.6.0
