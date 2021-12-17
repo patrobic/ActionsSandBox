@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    name: Build, Test & Publish Artifact
+    name: Build, Test & Upload Artifact
     runs-on: windows-latest
 
     steps:
@@ -42,10 +42,11 @@ jobs:
       uses: c-hive/gha-remove-artifacts@v1.2.0
       with:
         age: '0 day'
-        skip-recent: 2
+        skip-recent: 0
 
     - name: Generate Artifact
       uses: actions/upload-artifact@v2.2.1
       with:
        name: 'ActionsSandbox.zip'
        path: Publish/*
+       continue-on-error: true
