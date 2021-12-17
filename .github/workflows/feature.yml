@@ -1,4 +1,4 @@
-name: "feature: Execute Tests"
+name: feature - Execute Tests
 
 on:
   push:

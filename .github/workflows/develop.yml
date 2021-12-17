@@ -1,4 +1,4 @@
-name: "develop: Publish Artifact"
+name: develop - Publish Artifact
 
 on:
   push:
